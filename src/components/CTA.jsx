@@ -9,7 +9,7 @@ const TRUST_ITEMS = [
 ]
 
 export default function CTA() {
-  const DEMO_API_URL = 'http://localhost:8080/api/demo-requests'
+  const DEMO_API_URL = 'https://scan-dine-backend-1.onrender.com/dine_in_customer/api/demo-requests'
   const [isDemoOpen, setIsDemoOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitState, setSubmitState] = useState('idle')

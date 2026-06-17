@@ -227,7 +227,7 @@ export default function Hero() {
             {/* CTA Buttons */}
             <motion.div {...fade(0.28)} className="hero-actions" style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 20 }}>
               {/* Primary — glowing */}
-              <motion.a
+              {/* <motion.a
                 href="#pricing"
                 className="btn-glow"
                 whileHover={{ scale: 1.025 }}
@@ -244,7 +244,7 @@ export default function Hero() {
               >
                 Book Your Free Demo
                 <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M9 4l3.5 3.5L9 11" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              </motion.a>
+              </motion.a> */}
 
               {/* Secondary */}
               <motion.a
