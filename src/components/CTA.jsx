@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const TRUST_ITEMS = [
   { icon: '🔒', label: 'Secure & encrypted' },
@@ -8,6 +9,87 @@ const TRUST_ITEMS = [
 ]
 
 export default function CTA() {
+  const DEMO_API_URL = 'http://localhost:8080/api/demo-requests'
+  const [isDemoOpen, setIsDemoOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitState, setSubmitState] = useState('idle')
+  const [form, setForm] = useState({
+    name: '',
+    mobile: '',
+    email: '',
+  })
+
+  useEffect(() => {
+    if (!isDemoOpen) return
+
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setIsDemoOpen(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = originalOverflow
+    }
+  }, [isDemoOpen])
+
+  useEffect(() => {
+    const onOpenDemoForm = () => {
+      setSubmitState('idle')
+      setIsDemoOpen(true)
+    }
+
+    window.addEventListener('open-demo-form', onOpenDemoForm)
+    return () => window.removeEventListener('open-demo-form', onOpenDemoForm)
+  }, [])
+
+  const openDemoForm = () => {
+    setSubmitState('idle')
+    setIsDemoOpen(true)
+  }
+
+  const handleChange = (event) => {
+    const { name, value } = event.target
+    setForm((current) => ({ ...current, [name]: value }))
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setSubmitState('idle')
+
+    if (!form.name.trim() || !form.mobile.trim()) {
+      setSubmitState('error')
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      const response = await fetch(DEMO_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          mobile: form.mobile.trim(),
+          email: form.email.trim() || undefined,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Request failed')
+      }
+
+      setSubmitState('success')
+      setForm({ name: '', mobile: '', email: '' })
+    } catch {
+      setSubmitState('error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <section className="section section--gray">
       <div className="container">
@@ -81,7 +163,7 @@ export default function CTA() {
               {[
                 { stat: '35%', label: 'Revenue increase' },
                 { stat: '48%', label: 'Faster table turnover' },
-                { stat: '2M+', label: 'Orders processed' },
+                { stat: '1300+', label: 'Orders processed' },
               ].map(({ stat, label }) => (
                 <div key={label} style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -110,16 +192,17 @@ export default function CTA() {
                 }}
                 onMouseEnter={e => (e.currentTarget.style.opacity = '0.92')}
                 onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-              >
+                >
                 Start Growing My Restaurant
                 <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M9 4l3.5 3.5L9 11" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </motion.a>
-              <motion.a
-                href="#demo"
+              <motion.button
+                type="button"
+                onClick={openDemoForm}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                   background: 'transparent', color: 'rgba(255,255,255,0.85)',
                   fontWeight: 600, fontSize: 15.5, padding: '14px 28px',
                   borderRadius: 14, textDecoration: 'none', letterSpacing: '-0.01em',
@@ -130,7 +213,7 @@ export default function CTA() {
                 onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)')}
               >
                 Book a Free Demo Call
-              </motion.a>
+              </motion.button>
             </div>
 
             {/* Trust row */}
@@ -145,6 +228,108 @@ export default function CTA() {
           </div>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {isDemoOpen && (
+          <motion.div
+            className="demo-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsDemoOpen(false)}
+          >
+            <motion.div
+              className="demo-modal"
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.98 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(event) => event.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="demo-form-title"
+            >
+              <div className="demo-modal__header">
+                <div>
+                  <div className="demo-modal__eyebrow">Book a free demo</div>
+                  <h3 id="demo-form-title" className="demo-modal__title">Tell us where to reach you</h3>
+                  <p className="demo-modal__subtitle">
+                    Name and mobile are required. Email is optional.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="demo-modal__close"
+                  onClick={() => setIsDemoOpen(false)}
+                  aria-label="Close demo form"
+                >
+                  ×
+                </button>
+              </div>
+
+              <form className="demo-form" onSubmit={handleSubmit}>
+                <label className="demo-field">
+                  <span>Name *</span>
+                  <input
+                    name="name"
+                    type="text"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Your name"
+                    autoComplete="name"
+                    required
+                  />
+                </label>
+
+                <label className="demo-field">
+                  <span>Mobile *</span>
+                  <input
+                    name="mobile"
+                    type="tel"
+                    value={form.mobile}
+                    onChange={handleChange}
+                    placeholder="10-digit mobile number"
+                    autoComplete="tel"
+                    required
+                  />
+                </label>
+
+                <label className="demo-field">
+                  <span>Email</span>
+                  <input
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                  />
+                </label>
+
+                {submitState === 'error' && (
+                  <div className="demo-form__message demo-form__message--error">
+                    Please enter your name and mobile number.
+                  </div>
+                )}
+
+                {submitState === 'success' && (
+                  <div className="demo-form__message demo-form__message--success">
+                    Thanks. Your demo request is ready to send to the backend.
+                  </div>
+                )}
+
+                <button type="submit" className="demo-form__submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : 'Request Demo'}
+                </button>
+
+                <p className="demo-form__note">
+                  We will only use this to contact you about the demo.
+                </p>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

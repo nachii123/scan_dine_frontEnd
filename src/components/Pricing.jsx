@@ -20,7 +20,7 @@ const PLANS = [
     name: 'Starter',
     desc: 'Perfect for small cafés and food stalls getting started.',
     monthly: 999,
-    annual: 799,
+    annual: 1199,
     features: [
       'Up to 5 tables',
       'QR digital menu',

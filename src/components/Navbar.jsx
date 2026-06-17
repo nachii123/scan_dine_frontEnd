@@ -27,6 +27,11 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
+  const openDemoForm = () => {
+    window.dispatchEvent(new Event('open-demo-form'))
+    setMobileOpen(false)
+  }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -89,12 +94,13 @@ export default function Navbar() {
             >
               Log in
             </a>
-            <motion.a
-              href="#pricing"
+            <motion.button
+              type="button"
               whileHover={{ scale: 1.025 }}
               whileTap={{ scale: 0.97 }}
+              onClick={openDemoForm}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                 background: '#1F5F2E', color: '#fff', fontSize: 14, fontWeight: 600,
                 padding: '10px 20px', borderRadius: 12, textDecoration: 'none',
                 letterSpacing: '-0.01em', transition: 'background 0.2s',
@@ -102,9 +108,9 @@ export default function Navbar() {
               onMouseEnter={e => (e.currentTarget.style.background = '#174826')}
               onMouseLeave={e => (e.currentTarget.style.background = '#1F5F2E')}
             >
-              Get Started
+              Book your free demo
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M8 3.5l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </motion.a>
+            </motion.button>
           </div>
 
           {/* Hamburger */}
@@ -154,13 +160,13 @@ export default function Navbar() {
                 <a href="#" style={{ flex: 1, textAlign: 'center', padding: '13px', border: '1.5px solid #E5E7EB', borderRadius: 12, fontWeight: 600, fontSize: 15, color: '#111' }}>
                   Log in
                 </a>
-                <a
-                  href="#pricing"
-                  onClick={() => setMobileOpen(false)}
+                <button
+                  type="button"
+                  onClick={openDemoForm}
                   style={{ flex: 1, textAlign: 'center', background: '#1F5F2E', color: '#fff', padding: '13px', borderRadius: 12, fontWeight: 600, fontSize: 15 }}
                 >
-                  Get Started
-                </a>
+                  Book your free demo
+                </button>
               </div>
             </div>
           </motion.div>

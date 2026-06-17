@@ -25,7 +25,7 @@ function Counter({ to, suffix = '', isDecimal = false, duration = 1900 }) {
 
 const STATS = [
   {
-    to: 2, suffix: 'M+', label: 'Orders Processed', sub: 'and growing every day',
+    to: 1300, suffix: '+', label: 'Orders Processed', sub: 'and growing every day',
     icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h9M3 15h6" stroke="#1F5F2E" strokeWidth="1.8" strokeLinecap="round"/></svg>,
   },
   {
@@ -38,14 +38,13 @@ const STATS = [
     icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l2 5h5l-4 3 2 6-5-3.5L5 16l2-6L3 7h5L10 2z" stroke="#1F5F2E" strokeWidth="1.6" strokeLinejoin="round"/></svg>,
   },
   {
-    to: 500, suffix: '+', label: 'Active Restaurants', sub: 'across 6 major cities',
+    to: 7, suffix: '+', label: 'Active Restaurants', sub: 'across 3 major cities',
     icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="8" width="16" height="10" rx="1.5" stroke="#1F5F2E" strokeWidth="1.6"/><path d="M6 8V6a4 4 0 018 0v2" stroke="#1F5F2E" strokeWidth="1.6"/><circle cx="10" cy="13" r="2" fill="#1F5F2E"/></svg>,
   },
 ]
 
 const TICKER_CITIES = [
-  'Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune',
-  'Jaipur', 'Kolkata', 'Ahmedabad', 'Surat', 'Chandigarh', 'Goa',
+  'Aurangabad',  'Bangalore', 'Pune',
 ]
 const TICKER_DOUBLED = [...TICKER_CITIES, ...TICKER_CITIES]
 
